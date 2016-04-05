@@ -60,16 +60,19 @@ function catch_new_instagram_post() {
                     chmod($uploadpath . $imageBaseName, 0775);
                     
                     //add image to media library and create meta info
-                    $filetype = wp_check_filetype( basename($uploadpath . $imageBaseName), null );
+                    $filetype = wp_check_filetype(basename($uploadpath . $imageBaseName), null );
                     $attachment = array(
                         'guid'           => $uploadpath . $imageBaseName, 
                         'post_mime_type' => $filetype['type'],
                         'post_title'     => preg_replace( '/\.[^.]+$/', '', $imageBaseName),
                         'post_content'   => '',
                         'post_status'    => 'inherit',
-                        'post_author' => 'luxeliving' //an author
+                        'post_author' => 2 //an author
                     );
-                    $attach_id = wp_insert_attachment( $attachment, $uploadpath . $imageBaseName, 0 );
+                    $attach_id = wp_insert_attachment( $attachment, $uploadpath . $imageBaseName, $post_id);
+					
+					require_once( ABSPATH . 'wp-admin/includes/image.php' );
+					
                     $attach_data = wp_generate_attachment_metadata( $attach_id, $uploadpath . $imageBaseName);
                     wp_update_attachment_metadata( $attach_id,  $attach_data );
 
@@ -84,7 +87,7 @@ function catch_new_instagram_post() {
              //'ID'           => $post_id,
              'post_title'   => $existingTitle,
              'post_content' => $newContent,
-             'post_author' => '2' //make sure the author is the one we want...same as author specified for media
+             'post_author' => 2 //make sure the author is the one we want...same as author specified for media
              );
              wp_update_post($newPostInfo);
         
